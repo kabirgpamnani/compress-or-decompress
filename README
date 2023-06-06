@@ -1,0 +1,43 @@
+Names: Kabir Pamnani and Isaac Monheit 
+
+Brief description of our architecture: 
+
+Our program reads in command line prompts in the main function in 40image.c.
+40image.c then calls one of the two functions defined in compress40.h, 
+depending if the user wants to compress '-c' or decompress '-d' an image. 
+
+If the user wants to compress a ppm image, compress40.c then calls functions
+defined in rgbcomponent.h to first trim the image to an even width and height,
+and then obtain a UArray2b of component video color space (CVS) structs, with 
+each struct representing one pixel of the inputted image. Then compress40.c 
+calls functions defined in compress2x2.h to convert the UArray2b of CVS structs
+into a UArray2b of 32-bit code words, where each code word holds data for a 2x2
+block of CVS structs. To achieve this task, compress2x2.c first converts the 
+CVS structs into block_value structs, where each block_value struct represents
+a 2x2 block of CVS structs. Then it called functions defined in quantization.h
+to convert the float values in the block_value structs to scaled ints and pack
+those ints into the resulting 32-bit code words. After that is done,
+compress40.c calls a function defined in readwritecompressed.h to print the
+UArray2b of code words to stdout in a compressed file format.
+
+If the user wants to decompress a compressed image, compress40.c then calls 
+functions defined in readwritecompressed.h to read in the image from standard
+output. Once the image has been read in from standard output, compress40.c then
+calls functions defined in compress2x2.h to unpack the 32-bit code words that
+are stored in a UArray2b. Using functions defined in quantization.h, each 
+32-bit code word is unpacked by first converting from scaled ints to float 
+values and storing those values in a CVS struct. Each 32-bit word corresponds to
+4 component video color space (CVS) structs in a 2x2 block of pixels. These 
+structs are then stored in a new UArray2b. compress40.c then calls functions 
+defined in rgbcomponent.h to convert the blocks of pixels in the UArray2b from
+CVS structs to a ppm image with pixels stored in RGB color space. Finally,
+compress40.c writes the decompressed ppm image to standard output. 
+
+
+Help Received: TAs!
+
+Correctly Implemented: Everything
+
+Hours spent analyzing problems: 10
+
+Hours spent solving problems: 30
